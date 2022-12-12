@@ -27,10 +27,14 @@ object DetectLanguages {
                     .fromAllLanguages()
                     .build()
 
-                val detections = subtitle.elements.filter{ it.relevant }.map {
+                val detections = subtitle.elements.mapNotNull{
 
                     if (it.music) {
-                        return@map it to "MUSIC"
+                        return@mapNotNull it to "MUSIC"
+                    }
+
+                    if (!it.relevant) {
+                        return@mapNotNull null
                     }
 
                     val detectedLanguage = detector.detectLanguageOf(it.string)
